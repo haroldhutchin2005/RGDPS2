@@ -23,7 +23,7 @@ module.exports.run = async function ({ api, event, args }) {
             link = youtubeMatch[0];
             title = args.join(" ").trim();
         } else {
-            return api.sendMessage("❌ | 𝖳𝗁𝗂𝗌 𝖬𝗎𝗌𝗂𝖼 𝗒𝗈𝗎 𝗋𝖾𝗉𝗅𝗒 𝗁𝖺𝗌 𝗇𝗈 𝖼𝗈𝗇𝗍𝖺𝗂𝗇𝖾𝖽 𝖺 𝖸𝗈𝗎𝖳𝗎𝖻𝖾 𝗅𝗂𝗇𝗄𝗌", threadID, messageID);
+            return api.sendMessage("❌ | 𝖳𝗁𝗂𝗌 𝖬𝗎𝗌𝗂𝖼 𝗒𝗈𝗎 𝗋𝖾𝗉𝗅𝗒 𝗁𝖺𝗌 𝗇𝗈 𝖼𝗈𝗇𝗍𝖺𝗂𝗇𝖾𝖽 𝖸𝗈𝗎𝖳𝗎𝖻𝖾 𝗅𝗂𝗇𝗄𝗌", threadID, messageID);
         }
     } else {
         [link, title] = args.join(" ").split("|").map(arg => arg.trim());
@@ -42,7 +42,7 @@ module.exports.run = async function ({ api, event, args }) {
 
         if (youtubeRegex.test(link)) {
             const axiosUrl = `https://reuploadgdph-0816871a3a93.herokuapp.com/api/upload?link=${encodeURIComponent(link)}`;
-            const uploadResponse = await axios.get(axiosUrl);
+            const uploadResponse = await axios.get(axiosUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
             uploadData = uploadResponse.data;
 
             if (!uploadData.src) {
@@ -55,7 +55,7 @@ module.exports.run = async function ({ api, event, args }) {
 
         const apiUrl = `https://johnrickgdp.ps.fhgdps.com/dashboard/api/addSong.php?download=${encodeURIComponent(link)}&author=RGDPSCCMUSIC&name=${encodeURIComponent(title)}`;
 
-        const response = await axios.get(apiUrl);
+        const response = await axios.get(apiUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
         const responseData = response.data;
 
         if (!responseData.success) {
