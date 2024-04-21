@@ -36,43 +36,21 @@ module.exports.run = async function ({ api, event, args }) {
     const waitMessage = await api.sendMessage("☁️ | 𝖱𝖾𝗎𝗉𝗅𝗈𝖺𝖽𝗂𝗇𝗀 𝗍𝗁𝖾 𝖬𝗎𝗌𝗂𝖼 𝖯𝗅𝖾𝖺𝗌𝖾 𝖶𝖺𝗂𝗍..", threadID);
 
     try {
-        let uploadData;
-
-        const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
-
-        if (youtubeRegex.test(link)) {
-            const axiosUrl = `https://reuploadgdph-0816871a3a93.herokuapp.com/api/upload?link=${encodeURIComponent(link)}`;
-            const uploadResponse = await axios.get(axiosUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
-            uploadData = uploadResponse.data;
-
-            if (!uploadData.src) {
-                return api.editMessage("Failed to get src from the API.", waitMessage.messageID, threadID);
-            }
-
-            title = uploadData.src;
-            link = `https://reuploadgdph-0816871a3a93.herokuapp.com/files?src=${encodeURIComponent(title)}`;
-        }
-
-        const apiUrl = `https://johnrickgdp.ps.fhgdps.com/dashboard/api/addSong.php?download=${encodeURIComponent(link)}&author=RGDPSCCMUSIC&name=${encodeURIComponent(title)}`;
+        const apiUrl = `https://reuploadmusicgdpsbyjonellapis-7701ddc59ff1.herokuapp.com/api/jonell?url=${encodeURIComponent(link)}`;
 
         const response = await axios.get(apiUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
-        const responseData = response.data;
+        const { Successfully: { title: songTitle, url: songLink } } = response.data;
 
-        if (!responseData.success) {
-            if (responseData.error === 4) {
-                return api.editMessage(responseData.message, waitMessage.messageID, threadID);
-            } else if (responseData.error === 3) {
-                return api.editMessage(responseData.message, waitMessage.messageID, threadID);
-            } else {
-                return api.editMessage("An error occurred while processing your request.", waitMessage.messageID, threadID);
-            }
+        const addSongUrl = `https://johnrickgdp.ps.fhgdps.com/dashboard/api/addSong.php?download=${encodeURIComponent(songLink)}&author=RGDPSCCMUSIC&name=${encodeURIComponent(songTitle)}`;
+
+        const addSongResponse = await axios.get(addSongUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+        const { success, ID } = addSongResponse.data;
+
+        if (!success) {
+            return api.editMessage("An error occurred while processing your request.", waitMessage.messageID, threadID);
         }
 
-        const { song } = responseData;
-        const { ID, reuploader } = song;
-        const { username } = reuploader;
-
-        const message = `✅ | 𝖱𝖾-𝗎𝗉𝗅𝗈𝖺𝖽𝖾𝖽 𝖬𝗎𝗌𝗂𝖼 𝖱𝖦𝖣𝖯𝖲\n\n𝖨𝖣: ${ID}\n𝖭𝖺𝗆𝖾: ${title}`;
+        const message = `✅ | 𝖱𝖾-𝗎𝗉𝗅𝗈𝖺𝖽𝖾𝖽 𝖬𝗎𝗌𝗂𝖼 𝖱𝖦𝖣𝖯𝖲\n\n𝖨𝖣: ${ID}\n𝖭𝖺𝗆𝖾: ${songTitle}`;
 
         api.editMessage(message, waitMessage.messageID, threadID);
     } catch (error) {
