@@ -24,7 +24,7 @@ module.exports.run = async function ({ api, event, args }) {
     const waitMessage = await api.sendMessage("🔍 | 𝖢𝗁𝖾𝖼𝗄𝗂𝗇𝗀 𝖳𝗁𝖾 𝖣𝖺𝗍𝖺𝖻𝖺𝗌𝖾 𝖿𝗈𝗋 𝖲𝖾𝖺𝗋𝖼𝗁𝗂𝗇𝗀 𝖲𝗈𝗇𝗀𝗌 𝖴𝗉𝗅𝗈𝖺𝖽𝗌. 𝖯𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂𝗍...", event.threadID);
 
     try {
-        const response = await axios.get(apiUrl);
+        const response = await axios.get(apiUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
         const responseData = response.data;
 
         if (responseData.dashboard && responseData.success) {
