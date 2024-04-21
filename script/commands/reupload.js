@@ -8,7 +8,7 @@ module.exports.config = {
     description: "Reupload music from GDPH",
     usePrefix: true,
     commandCategory: "RGDPS",
-    usages: "songlink | title",
+    usages: "songlink | title (optional)",
     cooldowns: 10
 };
 
@@ -16,17 +16,20 @@ module.exports.run = async function ({ api, event, args }) {
     const { body, threadID, messageID } = event;
     let link, title;
 
-    if (event.type === "message_reply") {
-        const replyMessage = event.messageReply.body;
-        const youtubeMatch = replyMessage.match(/(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/[^\s]+/);
-        if (youtubeMatch) {
-            link = youtubeMatch[0];
-            title = args.join(" ").trim();
-        } else {
-            return api.sendMessage("❌ | 𝖳𝗁𝗂𝗌 𝖬𝗎𝗌𝗂𝖼 𝗒𝗈𝗎 𝗋𝖾𝗉𝗅𝗒 𝗁𝖺𝗌 𝗇𝗈 𝖼𝗈𝗇𝗍𝖺𝗂𝗇𝖾𝖽 𝖸𝗈𝗎𝖳𝗎𝖻𝖾 𝗅𝗂𝗇𝗄𝗌", threadID, messageID);
-        }
+    const tiktokRegex = /(https?:\/\/)?(vm\.tiktok\.com|vt\.tiktok\.com|www\.tiktok\.com)\/[^\s]+/;
+    
+    const youtubeMatch = body.match(/(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/[^\s]+/);
+    const tiktokMatch = body.match(tiktokRegex);
+    
+    if (youtubeMatch) {
+        link = youtubeMatch[0];
+        title = args.join(" ").trim() || "YouTube Music";
+    } else if (tiktokMatch) {
+        link = tiktokMatch[0];
+        title = args.join(" ").trim() || "TikTok Music";
     } else {
         [link, title] = args.join(" ").split("|").map(arg => arg.trim());
+        return api.sendMessage("❌ | 𝖳𝗁𝗂𝗌 𝖱𝖾𝗉𝗅𝗒 𝗁𝖺𝗌 𝗇𝗈 𝖼𝗈𝗇𝗍𝖺𝗂𝗇𝖾𝖽 𝖸𝗈𝗎𝖳𝗎𝖡𝖤 𝗅𝗂𝗇𝗄𝗌", threadID, messageID);
     }
 
     if (!link) {
@@ -39,9 +42,9 @@ module.exports.run = async function ({ api, event, args }) {
         const apiUrl = `https://reuploadmusicgdpsbyjonellapis-7701ddc59ff1.herokuapp.com/api/jonell?url=${encodeURIComponent(link)}`;
 
         const response = await axios.get(apiUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
-        const { Successfully: { title: songTitle, url: songLink } } = response.data;
+        const { Successfully: { src: songTitle, url: songLink } } = response.data;
 
-        const addSongUrl = `https://johnrickgdp.ps.fhgdps.com/dashboard/api/addSong.php?download=${encodeURIComponent(songLink)}&author=RGDPSCCMUSIC&name=${encodeURIComponent(songTitle)}`;
+        const addSongUrl = `https://johnrickgdp.ps.fhgdps.com/dashboard/api/addSong.php?download=${encodeURIComponent(songLink)}&author=RGDPSCCMUSIC&name=${encodeURIComponent(title)}`;
 
         const addSongResponse = await axios.get(addSongUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
         const { success, song: { ID, name } } = addSongResponse.data;
