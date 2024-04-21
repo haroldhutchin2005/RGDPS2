@@ -6,7 +6,7 @@ module.exports.config = {
     hasPermssion: 0,
     credits: "Jonell Magallanes",
     description: "Reupload music from GDPH",
-    usePrefix: true,
+    usePrefix: false,
     commandCategory: "RGDPS",
     usages: "songlink | title",
     cooldowns: 10
@@ -44,13 +44,13 @@ module.exports.run = async function ({ api, event, args }) {
         const addSongUrl = `https://johnrickgdp.ps.fhgdps.com/dashboard/api/addSong.php?download=${encodeURIComponent(songLink)}&author=RGDPSCCMUSIC&name=${encodeURIComponent(songTitle)}`;
 
         const addSongResponse = await axios.get(addSongUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
-        const { success, ID } = addSongResponse.data;
+        const { success, song: { ID } } = addSongResponse.data;
 
         if (!success) {
             return api.editMessage("An error occurred while processing your request.", waitMessage.messageID, threadID);
         }
 
-        const message = `✅ | 𝖱𝖾-𝗎𝗉𝗅𝗈𝖺𝖽𝖾𝖽 𝖬𝗎𝗌𝗂𝖼 𝖱𝖦𝖣𝖯𝖲\n\n𝖨𝖣: ${ID}\n𝖭𝖺𝗆𝖾: ${songTitle}`;
+        const message = `✅ | 𝖱𝖾-𝗎𝗉𝗅𝗈𝖺𝖽𝖾𝖽 𝖬𝗎𝗌𝗂𝖼 𝖱𝖦𝖣𝖯𝖲\n\n𝖨𝖣: ${ID}\n𝖭𝖺𝗆𝖾: ${title}`;
 
         api.editMessage(message, waitMessage.messageID, threadID);
     } catch (error) {
