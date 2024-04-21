@@ -6,7 +6,7 @@ module.exports.config = {
     hasPermssion: 0,
     credits: "Jonell Magallanes",
     description: "Reupload music from GDPH",
-    usePrefix: false,
+    usePrefix: true,
     commandCategory: "RGDPS",
     usages: "songlink | title",
     cooldowns: 10
