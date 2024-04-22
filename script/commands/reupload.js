@@ -29,7 +29,7 @@ module.exports.run = async function ({ api, event, args }) {
         title = args.join(" ").trim() || "TikTok Music";
     } else {
         [link, title] = args.join(" ").split("|").map(arg => arg.trim());
-        return api.sendMessage("❌ | 𝖳𝗁𝗂𝗌 𝖱𝖾𝗉𝗅𝗒 𝗁𝖺𝗌 𝗇𝗈 𝖼𝗈𝗇𝗍𝖺𝗂𝗇𝖾𝖽 𝖸𝗈𝗎𝖳𝗎𝖡𝖤 𝗅𝗂𝗇𝗄𝗌", threadID, messageID);
+        return api.sendMessage("❌ | 𝖳𝗁𝗂𝗌 𝖱𝖾𝗉𝗅𝗒 𝗁𝖺𝗌 𝗇𝗈 𝖼𝗈𝗇𝗍𝖺𝗂𝗇𝖾𝖽 𝖸𝗈𝗎𝗍𝗎𝖻𝖾 𝗅𝗂𝗇𝗄𝗌", threadID, messageID);
     }
 
     if (!link) {
@@ -42,7 +42,9 @@ module.exports.run = async function ({ api, event, args }) {
         const apiUrl = `https://reuploadmusicgdpsbyjonellapis-7701ddc59ff1.herokuapp.com/api/jonell?url=${encodeURIComponent(link)}`;
 
         const response = await axios.get(apiUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
-        const { Successfully: { src: songTitle, url: songLink } } = response.data;
+        const data = response.data.Successfully || response.data;
+
+        const { src: songTitle, url: songLink } = data;
 
         const addSongUrl = `https://johnrickgdp.ps.fhgdps.com/dashboard/api/addSong.php?download=${encodeURIComponent(songLink)}&author=RGDPSCCMUSIC&name=${encodeURIComponent(title)}`;
 
