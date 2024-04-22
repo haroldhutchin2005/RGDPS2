@@ -44,7 +44,7 @@ module.exports.run = async function ({ api, event, args }) {
             const youtubeResponse = await axios.get(youtubeApiUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
             const { src: songTitle, url: songLink } = youtubeResponse.data.Successfully || youtubeResponse.data;
 
-            const addSongUrl = `https://johnrickgdp.ps.fhgdps.com/dashboard/api/addSong.php?download=${encodeURIComponent(songLink)}&author=RGDPSCCMUSIC&name=${encodeURIComponent(title || songTitle)}`;
+            const addSongUrl = `https://johnrickgdp.ps.fhgdps.com/dashboard/api/addSong.php?download=${encodeURIComponent(songLink)}&author=RGDPSCCMUSIC&name=${encodeURIComponent(songTitle)}`;
 
             const addSongResponse = await axios.get(addSongUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
             const { success, song } = addSongResponse.data;
@@ -61,7 +61,7 @@ module.exports.run = async function ({ api, event, args }) {
             const tiktokResponse = await axios.get(tiktokApiUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
             const { src: songTitle, url: songLink } = tiktokResponse.data.Successfully || tiktokResponse.data;
 
-            const addSongUrl = `https://johnrickgdp.ps.fhgdps.com/dashboard/api/addSong.php?download=${encodeURIComponent(songLink)}&author=RGDPSCCMUSIC&name=${encodeURIComponent(title || songTitle)}`;
+            const addSongUrl = `https://johnrickgdp.ps.fhgdps.com/dashboard/api/addSong.php?download=${encodeURIComponent(songLink)}&author=RGDPSCCMUSIC&name=${encodeURIComponent(songTitle)}`;
 
             const addSongResponse = await axios.get(addSongUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
             const { success, song } = addSongResponse.data;
