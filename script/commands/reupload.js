@@ -23,7 +23,7 @@ module.exports.run = async function ({ api, event, args }) {
             link = youtubeMatch[0];
             title = args.join(" ").trim();
         } else {
-            return api.sendMessage("❌ | 𝖳𝗁𝗂𝗌 𝖬𝗎𝗌𝗂𝖼 𝗒𝗈𝗎 𝗋𝖾𝗉𝗅𝗒 𝗁𝖺𝗌 𝗇𝗈 𝖼𝗈𝗇𝗍𝖺𝗂𝗇𝖾𝖽 𝖸𝗈𝗎𝖳𝗎𝖻𝖾 𝗅𝗂𝗇𝗄𝗌", threadID, messageID);
+            return api.sendMessage("❌ | 𝖳𝗁𝗂𝗌 𝖬𝗎𝗌𝗂𝖼 𝗒𝗈𝗎 𝗋𝖾𝗉𝗅𝗒 𝗁𝖺𝗌 𝗇𝗈 𝖼𝗈𝗇𝗍𝖺𝗂𝗇𝖾𝖉 𝖸𝗈𝗎𝖳𝗎𝖻𝖾 𝗅𝗂𝗇𝗄𝗌", threadID, messageID);
         }
     } else {
         [link, title] = args.join(" ").split("|").map(arg => arg.trim());
@@ -44,11 +44,13 @@ module.exports.run = async function ({ api, event, args }) {
         const addSongUrl = `https://johnrickgdp.ps.fhgdps.com/dashboard/api/addSong.php?download=${encodeURIComponent(songLink)}&author=RGDPSCCMUSIC&name=${encodeURIComponent(songTitle)}`;
 
         const addSongResponse = await axios.get(addSongUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
-        const { success, song: { ID, name } } = addSongResponse.data;
-
-        if (!success) {
+        
+        const responseData = addSongResponse.data;
+        if (!responseData.success || !responseData.song || !responseData.song.ID) {
             return api.editMessage("An error occurred while processing your request.", waitMessage.messageID, threadID);
         }
+
+        const { success, song: { ID, name } } = responseData;
 
         const message = `✅ | 𝖱𝖾-𝗎𝗉𝗅𝗈𝖺𝖽𝖾𝖽 𝖬𝗎𝗌𝗂𝖼 𝖱𝖦𝖣𝖯𝖲\n\n𝖨𝖣: ${ID}\n𝖭𝖺𝗆𝖾: ${name}`;
 
